@@ -1,0 +1,11 @@
+[Unit]
+Description=Tvsctld activation socket
+ 
+[Socket]
+ListenStream=/run/isel/tvsctld/request
+#SocketUser=isel
+SocketGroup=tvsgrp
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target

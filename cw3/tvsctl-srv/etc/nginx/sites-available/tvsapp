@@ -1,0 +1,17 @@
+upstream tvsapp {
+    server 127.0.0.1:43211;
+    server 127.0.0.1:43212;
+    server 127.0.0.1:43213;
+    server 127.0.0.1:43214;
+}
+
+server {
+    listen 44444 default_server;
+    server_name _;
+
+    location / {
+        proxy_pass http://tvsapp/;
+        proxy_set_header Host $host;
+    }
+}
+

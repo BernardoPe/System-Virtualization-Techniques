@@ -1,0 +1,19 @@
+FROM node:alpine
+
+WORKDIR /home/node/app
+
+COPY --chown=node:node ./tvsapp/app/package.json ./
+
+RUN chown -R node:node /home/node && npm install && apk add --no-cache fortune && mkdir -p /usr/games && ln -s /usr/bin/fortune /usr/games/fortune
+
+COPY --chown=node:node ./tvsapp/app/files ./files
+
+COPY --chown=node:node ./tvsapp/app/tvsapp.js ./
+
+ENV NODE_PORT=8005
+
+USER node
+
+EXPOSE $NODE_PORT
+
+CMD ["node", "tvsapp.js"]

@@ -1,0 +1,10 @@
+[Unit]
+Description=TVS Web Application
+After=network.target
+
+[Service]
+Environment=NODE_PORT=%i
+Type=simple
+User=isel
+ExecStart=/usr/bin/node /opt/isel/tvs/tvsapp/app/tvsapp.js
+Restart=on-failure

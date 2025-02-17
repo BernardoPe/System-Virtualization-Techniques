@@ -1,0 +1,61 @@
+
+services:
+
+  tvsapp: # For ex 1
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile-tvsapp
+    environment:
+      - NODE_PORT=8005
+      - ELASTIC_URL=http://storage:9200
+    ports:
+      - "12001:8005"
+      - "12002:8005"
+      - "12003:8005"
+      - "12004:8005"
+    depends_on:
+      - storage
+    networks:
+      - back_net
+
+  entry:
+    image: nginx:alpine
+    container_name: entry
+    ports:
+      - "2024:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - webapp
+    networks:
+      - front_net
+
+  webapp:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile-tvsapp
+    environment:
+      - ELASTIC_URL=http://storage:9200
+    depends_on:
+      - storage
+    networks:
+      - front_net
+      - back_net
+
+  storage:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+    container_name: storage
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - back_net
+
+volumes:
+  es_data:
+
+networks:
+  front_net:
+  back_net:
